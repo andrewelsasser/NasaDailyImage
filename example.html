@@ -1,0 +1,52 @@
+<html>
+  <head>
+
+<script type="text/javascript">
+const apiUrl = 'https://api.nasa.gov/planetary/apod?api_key=${api_key}'; //define the API endpoint URL. Need a nasa.gov key? Go here: https://api.nasa.gov/
+
+//initiate the process
+fetch(apiUrl)
+  .then(response => { 
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();//Resolve the response object
+  })
+  .then(responseData => {
+    if (responseData.media_type === 'image') { //if the response includes an image:
+      document.getElementById("image").innerHTML = `<img src="${responseData.hdurl}" width="100%" height="100%"/>`; //create and set the html img element src to the image url
+    } else {
+      document.getElementById("image").innerHTML = `<iframe width="100%" height="100%" src="${responseData.url}" frameborder="0" allowfullscreen></iframe>`; //else create an iframe to render the video
+    }
+    //set the corresponding html element values by getting the appropriate response data from the JSON response
+    document.getElementById("title").textContent = responseData.title;
+    document.getElementById("copyright").textContent = responseData.copyright;
+    document.getElementById("date").textContent = responseData.date ;
+    document.getElementById("explanation").textContent = responseData.explanation;
+   
+  })
+  .catch(error => { 
+    document.getElementById("image").textContent = 'Failed to load image :('; //simple error handling via catch method   
+  });
+</script>
+</head>
+
+<body>
+
+<div style="text-align:center;">
+
+
+<br/>
+<h2>NASA.gov</h2>
+<h3>Image of the Day</h3>
+<div id="image" height="100%"></div>
+<p id="title"></p>
+<p id="copyright"></p>
+<p id="date"></p>
+<p id="explanation"></p>
+
+</div>
+
+</body>
+</html>
+
